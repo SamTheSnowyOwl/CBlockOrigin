@@ -4,7 +4,7 @@ RM = del /q /f
 
 all: Block
 
-Block: src/main.o src/trie.o
+Block: src/main.o src/trie.o src/parser.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 src/%.o: src/%.c
