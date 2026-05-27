@@ -3,25 +3,31 @@
 #include "parser.h"
 
 int main() {
-    TrieNode* filter_rules_root = create_node();
+    TrieNode* buckets[NUM_BUCKETS];
+    for (int i = 0; i < NUM_BUCKETS; i++) {
+        buckets[i] = create_node();
+    }
 
     // Parse rules from file
-    printf("Loading filter engine lists...\n");
-    if (!parse_filter_file(filter_rules_root, "rules.txt")) {
-        free_trie(filter_rules_root);
+    printf("Loading filter engine lists into buckets...\n");
+    if (!parse_filter_file_to_buckets(buckets, "rules.txt")) {
+        for (int i = 0; i < NUM_BUCKETS; i++) free_trie(buckets[i]);        
         return 1;
     }
 
     // Matching logic
     const char* test_url = "/ads/banner.js";
-    printf("\nEvaluating outboudn request %s\n", test_url);
+    RequestType type = REQ_SCRIPT;
 
-    if (search_url(filter_rules_root, test_url)) {
+    printf("\nEvaluating inbound request %s\n", test_url);
+    if (search_url(buckets[type], test_url)) {
         printf("Result: [ BLOCKED ]\n");
     } else {
         printf("Result: [ ALLOWED ]\n");
     }
 
-    free_trie(filter_rules_root);
+    for (int i = 0; i < NUM_BUCKETS; i++) {
+        free_trie(buckets[i]);
+    }
     return 0;
 }

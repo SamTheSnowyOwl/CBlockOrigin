@@ -20,7 +20,7 @@ static uint32_t parse_options(const char* options_str) {
     return flags;
 }
 
-bool parse_filter_file(TrieNode* root, const char* filepath) {
+bool parse_filter_file_to_buckets(TrieNode* buckets[], const char* filepath) {
     FILE* file = fopen(filepath, "r");
     if (!file) {
         printf("Error: Could not open filter file %s\n", filepath);
@@ -52,12 +52,18 @@ bool parse_filter_file(TrieNode* root, const char* filepath) {
         }
 
         if (url_pattern[0] != '\0') {
-            insert_rule(root, url_pattern, flags);
+            if (flags & FLAG_SCRIPT) {
+                insert_rule(buckets[REQ_SCRIPT], url_pattern, flags);
+            } else if (flags & FLAG_IMAGE) {
+                insert_rule(buckets[REQ_IMAGE], url_pattern, flags);
+            } else {
+                insert_rule(buckets[REQ_OTHER], url_pattern, flags);
+            }            
             rules_loaded++;
         }
     }
 
     fclose(file);
-    printf("Parser complete. Successfully compiled %d rules into memory.\n", rules_loaded);
+    printf("Parser complete. Successfully compiled %d rules into memory buckets.\n", rules_loaded);
     return true;
 }
