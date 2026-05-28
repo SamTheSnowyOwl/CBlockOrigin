@@ -16,6 +16,6 @@ typedef enum {
     NUM_BUCKETS
 } RequestType;
 
-bool parse_filter_file(TrieNode* buckets[], const char* filepath);
+bool parse_filter_file_to_buckets(TrieNode* buckets[], const char* filepath);
 
 #endif
