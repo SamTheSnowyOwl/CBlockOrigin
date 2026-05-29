@@ -30,22 +30,37 @@ void insert_rule(TrieNode* root, const char* rule_str, uint32_t flags) {
     current->context_flags = flags;
 }
 
-bool search_url(TrieNode* root, const char* url_str) {
+static bool check_exact_match(TrieNode* root, const char* str) {
     TrieNode* current = root;
 
-    for(int i = 0; url_str[i] != '\0'; i++) {
-        unsigned char index = (unsigned char)url_str[i];
+    while (*str != '\0') {
+        unsigned char index = (unsigned char)*str;
 
         if (current->children[index] == NULL) {
             return false;
         }
+
         current = current->children[index];
 
         if (current->is_end_of_rule) {
             return true;
+        }
+
+        str++;
+    }
+
+    return current->is_end_of_rule;
+}
+
+bool search_url(TrieNode* root, const char* url_str) {
+    if (!root || !url_str || *url_str == '\0') return false;
+
+    for(size_t i = 0; url_str[i] != '\0'; i++) {
+        if (check_exact_match(root, &url_str[i])) {
+            return true;
         }        
     }
-    return current->is_end_of_rule;
+    return false;
 }
 
 void free_trie(TrieNode* root) {
