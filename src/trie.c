@@ -15,6 +15,7 @@ TrieNode* create_node(void) {
 }
 
 void insert_rule(TrieNode* root, const char* rule_str, uint32_t flags) {
+    if (!root || !rule_str) return;
     TrieNode* current = root;
 
     for (int i = 0; rule_str[i] != '\0'; i++) {
@@ -22,6 +23,7 @@ void insert_rule(TrieNode* root, const char* rule_str, uint32_t flags) {
 
         if (current->children[index] == NULL) {
             current->children[index] = create_node();
+            if (!current->children[index]) return;
         }
         current = current->children[index];
     }

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define ALPHABET_SIZE 128
+#define ALPHABET_SIZE 256
 
 typedef struct TrieNode {
     bool is_end_of_rule;

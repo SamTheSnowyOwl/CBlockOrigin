@@ -1,5 +1,0 @@
-! This is a mock easylist comment
-/ads/banner.js$script,third-party
-/doubleclick/
-! Another comment
-/pagead/tracking$image
